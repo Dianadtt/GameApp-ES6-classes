@@ -6,11 +6,11 @@ class Game {
         this.description = description;
         this.fetchApi = new FetchApi("https://games-app-siit.herokuapp.com");
     }
-    render(mountContainer) {
+    render() {
         const gameElement = document.createElement("div");
         gameElement.setAttribute('id', this._id);
         this._updateDomElementForGame(gameElement);
-        mountContainer.appendChild(gameElement);
+        return gameElement;
     }
     _updateDomElementForGame(element) {
         element.innerHTML = `
@@ -43,11 +43,7 @@ class Game {
 
         form.querySelector('button[id=saveGameBtn]').addEventListener('click', async(e) => {
             e.preventDefault();
-            const urlencoded = new URLSearchParams();
-            urlencoded.append("title", gameTitleElement.value);
-            urlencoded.append("imageUrl", gameImageUrlElement.value);
-            urlencoded.append("description", gameDescriptionElement.value);
-            const updatedGameFromApi = await fetchApi.updateGameRequest(this._id, urlencoded);
+            const updatedGameFromApi = await fetchApi.updateGameRequest(this._id, gameTitleElement.value, gameDescriptionElement.value, gameImageUrlElement.value);
             if (updatedGameFromApi !== undefined) {
                 this.title = updatedGameFromApi.title;
                 this.imageUrl = updatedGameFromApi.imageUrl;

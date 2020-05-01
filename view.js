@@ -17,8 +17,10 @@ async function getGames() {
 
     const gamesContainer = document.querySelector(".container");
     for (let i = 0; i < listGames.length; i++) {
-        listGames[i].render(gamesContainer);
+        const gameElement = listGames[i].render();
+        gamesContainer.appendChild(gameElement);
     }
+
 };
 getGames()
 
@@ -69,16 +71,15 @@ document.querySelector(".submitBtn").addEventListener("click", async function(ev
 
     validateReleaseTimestampElement(gameRelease, "The release date you provided is not a valid timestamp!");
     if (gameTitle.value !== "" && gameGender.value !== "" && gameImageUrl.value !== "" && gameRelease.value !== "") {
-        const urlencoded = new URLSearchParams();
-        urlencoded.append("title", gameTitle.value)
-        urlencoded.append("releaseDate", gameRelease.value)
-        urlencoded.append("gender", gameGender.value)
-        urlencoded.append("publisher", gamePublisher.value)
-        urlencoded.append("imageUrl", gameImageUrl.value)
-        urlencoded.append("description", gameDescription.value)
-        const newGameFromApi = await fetchApi.createNewGame(urlencoded)
+        const newGameFromApi = await fetchApi.createNewGame(
+            gameTitle.value,
+            gameRelease.value,
+            gameGender.value,
+            gamePublisher.value,
+            gameImageUrl.value,
+            gameDescription.value);
         const newGame = new Game(newGameFromApi._id, newGameFromApi.title, newGameFromApi.imageUrl, newGameFromApi.description);
         var gamesContainer = document.querySelector(".container")
-        newGame.render(gamesContainer);
+        gamesContainer.appendChild(newGame.render());
     }
 })
